@@ -47,6 +47,13 @@ class RGB():
         else:
             return False
 
+class Area(object):
+
+    def __init__(self):
+        self.area = []
+
+    def get_a(self):
+        pass
 
 
 # mas = [RGB(img2[0][0])]
@@ -66,15 +73,16 @@ for i, row in enumerate(img2):
         #     colors.add(rgb)
 mas = []
 for k, v in colors.items():
-    if len(v) > 400:
+    if len(v) > 4000:
         print(k, ':', len(v))
-        mas.append(k.mas)
+        mas.append(k)
 
 import math
-cv2.imshow('image', img2)
+# cv2.imshow('image', img2)
 n = math.ceil(math.sqrt(len(mas)))
 for i, x in enumerate(mas):
     plt.subplot(n, n, i + 1)
-    plt.imshow(np.array([[np.array([x[2], x[1], x[0]]) for _ in range(11)] for _1 in range(11)]))
+    # plt.imshow(np.array([[np.array([x[2], x[1], x[0]]) for _ in range(11)] for _1 in range(11)]))
+    plt.imshow(np.array([[np.array([x.b, x.r, x.g] if [i, j] in colors[x] else [255, 255, 255]) for j in range(len(img2[0]))] for i in range(len(img2))]))
 
 plt.show()
