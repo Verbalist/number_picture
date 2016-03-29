@@ -9,6 +9,7 @@ MEDIA_ROOT = 'images/'
 im_name = 'test2.jpg'
 watermark = 'watermark.png'
 
+
 class Test(unittest.TestCase):
 
     def watermark_test(self):
