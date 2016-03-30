@@ -1,3 +1,4 @@
+import cv2
 from PIL import Image
 from PIL.ImageDraw import Draw
 import PIL.ImageFont
@@ -95,10 +96,10 @@ def threshold(_img, _h, _w, t=20, white=(255, 255, 255)):
             for x in area[1]:
                 _img.putpixel(x, (0, 0, 0))
 
-    for _pix, area in white_map.items():
-        if len(area[0]) < t:
-            for x in area[0]:
-                _img.putpixel(x, (255, 255, 255))
+    # for _pix, area in white_map.items():
+    #     if len(area[0]) < 3:
+    #         for x in area[0]:
+    #             _img.putpixel(x, (255, 255, 255))
 
         #     area.sort(key=lambda _: _[1])
         #     c = area[0][1]
@@ -191,8 +192,19 @@ print('___ img read ___')
 
 
 set_k_colors(color_img, h, w, 30)
-
+color_img.save(MEDIA_ROOT + '30_color.png')
 print('___ set 30 colors ___')
+
+
+cv2_img = cv2.imread(MEDIA_ROOT + '30_color.png')
+spatialRadius = 35
+colorRadius = 25
+pyramidLevels = 3
+img2 = cv2.pyrMeanShiftFiltering(cv2_img, 10, colorRadius, pyramidLevels)
+cv2.imwrite(MEDIA_ROOT + '30_color.png', img2)
+
+print('___ mean shift ___')
+
 
 # a = get_c_c(color_img, h, w)
 # for x in a:
@@ -202,8 +214,8 @@ print('___ set 30 colors ___')
 
 
 # set_not_white(color_img, h, w)
-
-threshold(color_img, h, w, t=20)
+color_img = Image.open(MEDIA_ROOT + '30_color.png')
+threshold(color_img, h, w, t=30)
 
 # set_black(img, h, w)
 # a = get_mas()
