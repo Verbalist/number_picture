@@ -31,6 +31,7 @@ def flood_fill(_x, _y, color, image, white=(255, 255, 255)):
     if image.getpixel((_x, _y)) != white:
         return None
     return_set = []
+    contour = []
     fill_set = set()
     fill_set.add((_x, _y))
     # (a, b, c) = image.getpixel((_x, _y))
@@ -38,6 +39,8 @@ def flood_fill(_x, _y, color, image, white=(255, 255, 255)):
         (x, y) = fill_set.pop()
         (a, b, c) = image.getpixel((x, y))
         if not (a, b, c) == white:
+            if (a, b, c) != color:
+                contour.append((x, y))
             continue
         image.putpixel((x, y), color)
         return_set.append((x, y))
@@ -51,7 +54,7 @@ def flood_fill(_x, _y, color, image, white=(255, 255, 255)):
             fill_set.add((x, y + 1))
     # if not return_set:
         # print(_x, _y, image.getpixel((_x, _y)))
-    return return_set
+    return return_set, contour
 
 
 def get_info_area(area):
@@ -88,31 +91,39 @@ def threshold(_img, _h, _w, t=20, white=(255, 255, 255)):
                 white_map[(_j, _i)] = flood_fill(_j, _i, white, _img, white=_pix)
 
     for _pix, area in white_map.items():
-        if len(area) > t:
-            area.sort(key=lambda _: _[1])
-            c = area[0][1]
-            info = get_info_area(area)
-            min_x = info['max_i']
-            max_x = info['min_i']
-            for x in area:
-                print('x', x)
-                if x[1] == c:
-                    if x[1] in (info['max_j'][1], info['min_j'][1]):
-                        _img.putpixel(x, (0, 0, 0))
-                    else:
-                        if min_x[0] >= x[0]:
-                            min_x = x
-                        if max_x[0] <= x[0]:
-                            max_x = x
-                else:
-                    print(max_x)
-                    print(min_x)
-                    if x[1] not in (info['max_j'], info['min_j']):
-                        _img.putpixel(min_x, (0, 0, 0))
-                        _img.putpixel(max_x, (0, 0, 0))
-                        c = x[1]
-                        min_x = info['max_i']
-                        max_x = info['min_i']
+        if len(area[0]) > t:
+            for x in area[1]:
+                _img.putpixel(x, (0, 0, 0))
+
+    for _pix, area in white_map.items():
+        if len(area[0]) < t:
+            for x in area[0]:
+                _img.putpixel(x, (255, 255, 255))
+
+        #     area.sort(key=lambda _: _[1])
+        #     c = area[0][1]
+        #     info = get_info_area(area)
+        #     min_x = info['max_i']
+        #     max_x = info['min_i']
+        #     for x in area:
+        #         print('x', x)
+        #         if x[1] == c:
+        #             if x[1] in (info['max_j'][1], info['min_j'][1]):
+        #                 _img.putpixel(x, (0, 0, 0))
+        #             else:
+        #                 if min_x[0] >= x[0]:
+        #                     min_x = x
+        #                 if max_x[0] <= x[0]:
+        #                     max_x = x
+        #         else:
+        #             print(max_x)
+        #             print(min_x)
+        #             if x[1] not in (info['max_j'], info['min_j']):
+        #                 _img.putpixel(min_x, (0, 0, 0))
+        #                 _img.putpixel(max_x, (0, 0, 0))
+        #                 c = x[1]
+        #                 min_x = info['max_i']
+        #                 max_x = info['min_i']
             # for x in area:
             #     _img.putpixel(x, color_img_d.getpixel(x))
 
@@ -200,6 +211,7 @@ threshold(color_img, h, w, t=20)
 # draw = Draw(img)
 # set_number(img, draw, f_size=10)
 #
-plt.imshow(color_img)
-plt.savefig(MEDIA_ROOT + '30_color_mask.png')
-plt.show()
+# plt.imshow(color_img)
+# plt.savefig(MEDIA_ROOT + '30_color_mask.png')
+color_img.save(MEDIA_ROOT + '30_color_mask.png')
+# plt.show()
