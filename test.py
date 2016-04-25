@@ -192,11 +192,11 @@ print('___ img read ___')
 
 
 set_k_colors(color_img, h, w, 30)
-color_img.save(MEDIA_ROOT + '30_color.png')
+color_img.save(MEDIA_ROOT + '30_color_0.png')
 print('___ set 30 colors ___')
 
 
-cv2_img = cv2.imread(MEDIA_ROOT + '30_color.png')
+cv2_img = cv2.imread(MEDIA_ROOT + '30_color_0.png')
 spatialRadius = 35
 colorRadius = 25
 pyramidLevels = 3
@@ -215,7 +215,7 @@ print('___ mean shift ___')
 
 # set_not_white(color_img, h, w)
 color_img = Image.open(MEDIA_ROOT + '30_color.png')
-threshold(color_img, h, w, t=30)
+threshold(color_img, h, w, t=5)
 
 # set_black(img, h, w)
 # a = get_mas()
