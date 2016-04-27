@@ -9,7 +9,8 @@ from sklearn.cluster import k_means, MeanShift, estimate_bandwidth, KMeans
 MEDIA_ROOT = 'images/'
 im_name = 'c.jpg'
 watermark = 'watermark.png'
-
+resize_size = (3508, 4961)
+resize_size_revert = (4961, 3508)
 
 img = Image.open(MEDIA_ROOT + str(im_name))
 
@@ -96,6 +97,8 @@ def threshold(_img, _h, _w, t=20, white=(255, 255, 255)):
             for x in area[1]:
                 _img.putpixel(x, (0, 0, 0))
 
+    return white_map
+
     # for _pix, area in white_map.items():
     #     if len(area[0]) < 3:
     #         for x in area[0]:
@@ -161,21 +164,22 @@ def seed_filter(img):
     pass
 
 
-def set_number(_img, _draw, f_size=20):
+def set_number(_img, _draw, _map, f_size=20):
     font = PIL.ImageFont.truetype("micross.ttf", size=f_size)
 
-    for pixel, r_set in color_map.items():
-        color = color_img.getpixel(pixel)
-        for re_pix in r_set:
-            _img.putpixel(re_pix, color)
-        if len(r_set) > 50:
+    for pixel, r_set in _map.items():
+        # color = color_img.getpixel(pixel)
+        # for re_pix in r_set:
+        #     _img.putpixel(re_pix, color)
+        if len(r_set) > 10:
             max_i = max(r_set, key=lambda _: _[0])[0]
             min_i = min(r_set, key=lambda _: _[0])[0]
             max_j = max(r_set, key=lambda _: _[1])[1]
             min_j = min(r_set, key=lambda _: _[1])[1]
             _pix = ((max_i - min_i)/2 + min_i, (max_j - min_j)/2 + min_j)
             _draw.text(_pix, str(random.randint(1, 300)), (0, 0, 0), font=font)
-
+            print('a')
+    return _draw
         # print((x, y))
 
 # color_img = Image.open(MEDIA_ROOT + str('5.png'))
@@ -215,15 +219,18 @@ print('___ mean shift ___')
 
 # set_not_white(color_img, h, w)
 color_img = Image.open(MEDIA_ROOT + '30_color.png')
-threshold(color_img, h, w, t=5)
+white_map = threshold(color_img, h, w, t=10)
 
 # set_black(img, h, w)
-# a = get_mas()
-# seeds(a, img, (255, 255, 255))
-# draw = Draw(img)
-# set_number(img, draw, f_size=10)
+a = get_mas(color_img)
+seeds(a, color_img, (255, 255, 255))
+color_img = color_img.resize(resize_size_revert)
+color_img.save(MEDIA_ROOT + '30_color_mask.png')
+
+draw = Draw(color_img)
+draw = set_number(img2.resize(resize_size_revert), draw, color_map, f_size=20)
+color_img.save(MEDIA_ROOT + '30_color_mask_with_number.png')
 #
 # plt.imshow(color_img)
 # plt.savefig(MEDIA_ROOT + '30_color_mask.png')
-color_img.save(MEDIA_ROOT + '30_color_mask.png')
 # plt.show()
